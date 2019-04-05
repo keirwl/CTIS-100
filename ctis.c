@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "assembler.h"
 #include "node.h"
 #include "scanner.h"
 
@@ -28,11 +29,15 @@ void print_token(Token token)
 
 int main()
 {
+    Node node;
     TokenList tokens;
+
     if (scan(&tokens, test_source)) {
         printf("------------------\n");
         for (int i = 0; i < tokens.count; i++) print_token(tokens.tokens[i]);
     }
+
+    assemble(&node, &tokens);
     
     for (int i = 0; i < tokens.count; i++) {
         Token token = tokens.tokens[i];

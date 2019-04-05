@@ -1,6 +1,6 @@
 P=ctis
 CFLAGS=-Wall -O3 -flto
-OBJECTS=ctis.o scanner.o node.o
+OBJECTS=ctis.o scanner.o node.o assembler.o
 
 all: $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -o $(P)
