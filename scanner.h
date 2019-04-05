@@ -17,7 +17,6 @@ typedef enum {
     TOK_JRO,
 
     // Other
-    TOK_COLON, TOK_COMMA,
     TOK_LITERAL, TOK_LABEL, TOK_END
 } TokenType;
 

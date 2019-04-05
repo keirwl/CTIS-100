@@ -6,23 +6,19 @@
 
 char test_source[] =
     "START:\n"
-    "MOV UP, ACC\n"
-    "JGZ POSITIVE\n"
-    "JLZ NEGATIVE\n"
-    "JMP START\n"
-    "POSITIVE:\n"
+    "MOV LEFT, ACC\n"
     "MOV ACC, RIGHT\n"
+    "JGZ ONE\n"
+    "MOV 0, DOWN\n"
     "JMP START\n"
-    "NEGATIVE:\n"
-    "MOV ACC, LEFT\n"
-    "JMP START";
+    "ONE: MOV 1, DOWN";
 
 void print_token(Token token)
 {
     if (token.type == TOK_LABEL) {
-        printf("%s\n", token.text);
+        printf("label: %s\n", token.text);
     } else if (token.type == TOK_LITERAL) {
-        printf("%d\n", token.num);
+        printf("literal: %d\n", token.num);
     } else if (token.type == TOK_END) {
         printf("------------------\n");
     } else {
