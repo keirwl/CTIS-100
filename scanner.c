@@ -21,7 +21,7 @@ const char *keywords[] = {
     "JGZ", "JLZ", "JRO"
 };
 
-void scan_error(const char *message)
+static void scan_error(const char *message)
 {
     fprintf(stderr, "Error at L%d C%d: %s\n", scanner.line, scanner.column, message);
     scanner.error = true;
@@ -92,8 +92,8 @@ static void label()
         return;
     }
 
-    text[tok_length] = '\0';
     strncat(text, scanner.start, tok_length);
+    text[tok_length] = '\0';
 
     add_token(TOK_LABEL, text, 0);
 }
