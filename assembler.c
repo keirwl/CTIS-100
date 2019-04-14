@@ -271,6 +271,7 @@ static int add_jump()
         return -1;
     }
 
+    instr->type = type;
     instr->name = name;
     strncat(instr->name, next->text, name_length);
     instr->name[name_length] = '\0';
@@ -294,21 +295,20 @@ static int add_label()
         assemble_error("Memory error in add_label()");
         return -1;
     }
-
+    label->next = NULL;
     label->name = name;
     strncat(label->name, token->text, name_length);
     label->name[name_length] = '\0';
     // The label should point to the next instruction, but that
-    // doesn't exist yet, so point to pt and go to next later
+    // doesn't exist yet, so point to pc and go to next later
     label->to = node->pc;
-    label->next = NULL;
 
     Label *curr_label = node->labels;
     if (curr_label == NULL) {
         node->labels = label;
     } else {
         while (curr_label->next != NULL) {
-            curr_label++;
+            curr_label = curr_label->next;
         }
         curr_label->next = label;
     }
@@ -325,7 +325,15 @@ static bool set_jumps()
                 if (strlen(instr->name) == strlen(label->name)
                         && !strcmp(instr->name, label->name)) {
                     found = true;
-                    instr->to = label->to->next == NULL ? node->program_start : label->to->next;
+                    if (label->to == NULL) {
+                        // Label was set when pc was null, thus must be beginning of program
+                        instr->to = node->program_start;
+                    } else if (label->to->next == NULL) {
+                        // Label was set at end of program, so wraps back to beginning
+                        instr->to = node->program_start;
+                    } else {
+                        instr->to = label->to->next;
+                    }
                 }
             }
             if (!found) {
@@ -401,7 +409,5 @@ bool assemble(Node *in_node, TokenList *token_list)
         }
     }
 
-    set_jumps();
-
-    return true;
+    return set_jumps();
 }

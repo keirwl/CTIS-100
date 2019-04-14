@@ -51,9 +51,9 @@ typedef struct {
 } InstrJump;
 
 typedef struct Label {
-    char *name;
     struct Label *next;
     struct Instr *to;
+    char *name;
 } Label;
 
 static inline bool is_jump(OpCode type)
