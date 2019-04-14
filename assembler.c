@@ -251,7 +251,14 @@ static int add_jump()
         assemble_error("Trying to make jump instruction with non-jump token.");
         return -1;
     }
-    size_t name_length = strlen(token->text) + 1;
+
+    Token *next = (token + 1);
+    if (next->type != TOK_LABEL) {
+        assemble_error("Non-label operator passed to jump instruction.");
+        return -1;
+    }
+
+    size_t name_length = strlen(next->text) + 1;
     char *name = malloc(name_length);
     if (!name) {
         assemble_error("Memory error in add_jump()");
@@ -264,16 +271,8 @@ static int add_jump()
         return -1;
     }
 
-    Token *next = (token + 1);
-    if (next->type != TOK_LABEL) {
-        free(name);
-        free(instr);
-        assemble_error("Non-label operator passed to jump instruction.");
-        return -1;
-    }
-
     instr->name = name;
-    strncat(instr->name, token->text, name_length);
+    strncat(instr->name, next->text, name_length);
     instr->name[name_length] = '\0';
     instr->next = NULL;
     SET_NEXT_INSTR(instr);

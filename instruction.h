@@ -56,7 +56,7 @@ typedef struct Label {
     struct Instr *to;
 } Label;
 
-bool is_jump(OpCode type)
+static inline bool is_jump(OpCode type)
 {
     return type == OP_JMP
         || type == OP_JEZ
